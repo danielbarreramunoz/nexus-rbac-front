@@ -1,0 +1,55 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "muse-spark-1.3-contributor",
+  "project": "nexus-rbac-front",
+  "stack": "nextjs-app-router",
+  "typescript": {
+    "strict": true
+  },
+  "packageManager": "npm",
+  "orchestration": {
+    "strategy": "subagents",
+    "agents": [
+      {
+        "id": "frontend-scaffolder",
+        "role": "Inicializar estructura base Next.js App Router con Tailwind y TypeScript",
+        "scope": "src/app/, tailwind.config.ts, tsconfig.json"
+      },
+      {
+        "id": "auth-ui",
+        "role": "Implementar pantallas de Login, persistencia de Token JWT y Guards de navegacion",
+        "scope": "src/app/(auth)/, src/context/, src/middleware.ts"
+      },
+      {
+        "id": "dashboard-builder",
+        "role": "Construir componentes de administracion Multi-tenant y gestion de Roles/Permisos",
+        "scope": "src/app/(dashboard)/, src/components/"
+      },
+      {
+        "id": "api-client",
+        "role": "Implementar cliente HTTP centralizado con interceptores para conectar con nexus-rbac-backend",
+        "scope": "src/services/"
+      },
+      {
+        "id": "tester",
+        "role": "Mantener tests unitarios de componentes (Vitest + React Testing Library) en verde",
+        "scope": "src/**/*.test.tsx, __tests__/"
+      }
+    ],
+    "workflow": ["frontend-scaffolder", "api-client", "auth-ui", "dashboard-builder", "tester"]
+  },
+  "agents": {
+    "builder": {
+      "mode": "all",
+      "model": "deepseek/deepseek-v4.1-flash-free",
+      "description": "Agente encargado del análisis estático, comprobación de tipos y verificación de builds en Next.js.",
+      "system": "Eres un pipeline de CI/CD experto en Next.js App Router. Verifica el tipado estático con `npx tsc --noEmit` y valida que `npm run build` compile sin errores."
+    },
+    "tester": {
+      "mode": "all",
+      "model": "loncat/loncat-2.5-preview-free",
+      "description": "Agente QA especializado en pruebas unitarias de componentes React (Vitest + RTL).",
+      "system": "Eres un Software QA Engineer experto en React 19 y Vitest. Escribe pruebas de componentes accesibles y robustas."
+    }
+  }
+}
