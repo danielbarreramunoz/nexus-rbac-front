@@ -25,6 +25,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Generate Next.js types
+        # next-env.d.ts está en .gitignore; sin esto, tsc no conoce los
+        # helpers globales LayoutProps/PageProps (los genera next dev/build/typegen)
+        run: npx next typegen
+
       - name: Typecheck
         run: npx tsc --noEmit
 

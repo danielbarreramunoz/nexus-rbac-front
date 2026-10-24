@@ -104,6 +104,7 @@ Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (GitHub Actions,
 |---|---|---|
 | Install | `npm ci` | Instalación reproducible desde `package-lock.json` (requiere Node 24 / npm 11, igual que el lock) |
 | Lint | `npm run lint` | ESLint (`eslint-config-next`) |
+| Types | `npx next typegen` | Genera `next-env.d.ts` (gitignoreado) con los helpers `LayoutProps`/`PageProps` |
 | Typecheck | `npx tsc --noEmit` | Verificación de tipos sin emitir |
 | Unit tests | `npm test -- --run` | Vitest + Testing Library + jsdom (9 tests) |
 | Build | `npm run build` | Build de producción Next.js (usa valores por defecto si no hay `.env`) |
