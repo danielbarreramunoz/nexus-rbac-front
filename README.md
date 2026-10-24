@@ -74,6 +74,8 @@ npm run dev
 | `NEXT_PUBLIC_DEMO_EMAIL` | `admin@nexus.demo` | Email del botón "probar con cuenta demo" |
 | `NEXT_PUBLIC_DEMO_PASSWORD` | `Demo1234` | Password del botón demo |
 
+> **Nota:** `@emnapi/core` y `@emnapi/runtime` están fijados como dependencias directas (versión exacta) aunque solo los usan subdependencias wasm (`sharp`, `@tailwindcss/oxide`). `npm` en Windows omite esas entradas del lock y `npm ci` en Linux (CI) falla con `Missing: ... from lock file`. Al ser dependencias directas, npm las incluye siempre y el lock es determinista en cualquier plataforma. No las muevas a `optionalDependencies` ni las elimines.
+
 ## Cuentas demo
 
 | Email | Password | Rol | Qué verás |
@@ -100,7 +102,7 @@ Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) (GitHub Actions,
 
 | Paso | Comando | Descripción |
 |---|---|---|
-| Install | `npm ci` | Instalación reproducible desde `package-lock.json` (requiere npm 11: el lock se genera con npm 11 y con npm 10 la resolución del árbol difiere) |
+| Install | `npm ci` | Instalación reproducible desde `package-lock.json` (requiere Node 24 / npm 11, igual que el lock) |
 | Lint | `npm run lint` | ESLint (`eslint-config-next`) |
 | Typecheck | `npx tsc --noEmit` | Verificación de tipos sin emitir |
 | Unit tests | `npm test -- --run` | Vitest + Testing Library + jsdom (9 tests) |
