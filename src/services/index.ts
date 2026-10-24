@@ -1,1 +1,1 @@
-export { apiClient, clearToken, setToken } from './api-client.js';
+export { ApiError, apiClient, clearToken, setToken } from './api-client';

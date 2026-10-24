@@ -1,9 +1,19 @@
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000';
+  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3003';
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
   return window.localStorage.getItem('nexus:token');
+}
+
+export class ApiError extends Error {
+  readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = 'ApiError';
+    this.status = status;
+  }
 }
 
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
@@ -17,8 +27,12 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     },
   });
   if (!res.ok) {
-    const body = await res.json().catch(() => null);
-    throw new Error(body?.message ?? `API error ${res.status}`);
+    const body: unknown = await res.json().catch(() => null);
+    const message =
+      typeof body === 'object' && body !== null && 'message' in body
+        ? String((body as { message: unknown }).message)
+        : `API error ${res.status}`;
+    throw new ApiError(res.status, message);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
